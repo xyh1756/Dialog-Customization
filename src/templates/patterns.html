@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="{{ url_for('static', filename='main.style.css') }}" rel="stylesheet">
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    <title>模板配置管理系统</title>
+</head>
+<body class="unit" style="overflow: hidden;">
+    <div class="unit-container">
+        <div class="top-nav">
+            <div class="top-nav-wrapper">
+                <a href="/" class="top-img"></a>
+            </div>
+        </div>
+        <div id="app">
+            <div id="root">
+                <div class="main-wrapper">
+                    <div class="main-content-wrapper">
+                        <div class="unit-secondary">
+                            <div class="unit-secondary-aside">
+                                <div class="cola-menu left-nav-wrap">
+                                    <div class="cola-menu-wrapper">
+                                        <div class="cola-menu-box" style="margin-right: -17px;">
+                                            <div class="cola-menu-item is-active">
+                                                <a href="patterns">
+                                                    <span class="menu-item-text">模板管理</span>
+                                                </a>
+                                            </div>
+                                            <div class="cola-menu-item">
+                                                <a href="slots">
+                                                    <span class="menu-item-text">词槽管理</span>
+                                                </a>
+                                            </div>
+                                            <div class="cola-menu-item">
+                                                <a href="features">
+                                                    <span class="menu-item-text">特征词管理</span>
+                                                </a>
+                                            </div>
+                                            <div class="cola-menu-item">
+                                                <a href="generals">
+                                                    <span class="menu-item-text">通用词管理</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="unit-secondary-section">
+                                <div class="unit-train-optimize unit-secondary-section">
+                                    <div class="unit-train-optimize-section unit-section">
+                                        <div class="template-manage-panel">
+                                            <div class="template-manage-panel-inner">
+                                                <div class="template-manage-header"></div>
+                                                <div class="template-manage-section">
+                                                    <div class="template-manage-section">
+                                                        <div class="list-sub-header">对话模板列表</div>
+                                                        <div class="template-manage-sub-section">
+                                                            <div class="template-manage-opt-area" onclick="addPattern()">
+                                                                <div class="opt-area-add">
+                                                                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAmCAYAAACoPemuAAAAAXNSR0IArs4c6QAABHpJREFUWAnNmE1IVFEUx2fGsFCGNjHhDOQiqGWFziyMYpBARtSgNqZWS3e16GMTgiStykXtWvah1sJAkaaghSARzgcqtClwoaADQxsRpQKdfv/ne9Pz9dQZcZo5cN897957/uf/zv1+Xs8+pKGhoc7r9XbkcrkL5CEgguhBQfG+TLbM+xL6FPl4Op3OqK4Y8RbaOBaLHc5ms7207yJFSIXa5mibIA0HAoHn8Xj8F/qesid4f3+/b2JiopsvHwCt3kRcIxof0d+T5n0+33JNTY0i5VlfXw9ubm4qeidJrdi1kNeSJAvY9bW1tQ2Bu7lV5P7clRhddgKgUcAbZY4+A4kBSMQnJyd/ukNuL41Go0cgG4NsHzjnTJwU+lW6eHF7679vOxJrbGw8j/E7mgZICxB6kEgkhiGnrilawPJGIpEuCD7CWJHPgnUllUp9dgNzJQapToBeYFCNcRz9Gl+34gZQbBm9cBTMETBj2P5Gvwm5N04cn7PAjJRBirpBxkPbQZGSL2EJU9ikagVAPlVnl20R05iiMklS9w0Cctfe+KB1/D0B8w4pSwrjLz/m8hHT7COsozQIqPva29vvo5dU5EO+cCKfo+JgOcxHjHBeJ6wvqVggnVHIrUalzDXmwJ8j1UPuBuPtlfwZDLV4QkrrlEez73+Rkj/5kk/p4iAu0o2IwfoW+lMYzySTyQbyopYE7I9h0yTAqqqqpenp6bT0QgVC3nA4nCbXOncbss+MiAHaLRAqHhZLSnZ88Vlsx5Q2NjbuqawYkU8wjB7DTluex8fX1gEYRl/z+/0fVFgO0W6C3zVSRJw0Ezt4IfN+LHSbKQVx+RYHk0uHj2hdNB1pQy63GBzESRHTSUAyv5WV9WlwEKdD0DCIMfiMY8tutDT7NNCdbfhCzSZD0I8zwy5Z71bO5j3LbPthvbvl4sDkUVXwEEAGMes85WZglfElTTgYs953yKO0iTrrsL1M2biz3P4uDqurq1odgurKotYsO1CpdHFSV+o87tfJk/z7bs60eBLqt8426j7Komb5IsBfnG1k6yxzvpscVJwRMY2tU4R/T2Lmit4pS7toTFndJ1Lsd/+0sbffSTc5qHpZy4X1JTqjl1sMDuKkMTZlsmktNyv8GxzESRHTTCHLtejiUC5y8i0OJpdxH2uLBr/ufbW6zZSLmOlb17yEOBmnC16GRYjBpytW/vCoskIEu1nCf1mJ2fe4EBt7G/mUb7PM4GKQMG/Z36ioZ/Xt4Uw2ZDcstc6s7obYa/wscFs/rdt6PjoVebRWRLhRDdEVKVSdvUfsFwPVl0LMC9AI2PKZEgfLTz5iKmCTrpjrW5XFUHkmk1kJhULaTnpIF4LBoL+3t/cTh7gD3U8VKTZrTRLdKXUbb2UmfkXPy7aIWaWMt8r7RSBy+pfAVzSjZpnKWtvmNHP2s5QITyJbYaDOmZj6qdLs9t9C7V0jpgqJxhzGlfUbaouax6PxUHE/7ixyyq1fnURQXarr3q7RttnmsEliM3SgvzptDvKq7n04K+nP4T/LZ20vsZZ25wAAAABJRU5ErkJggg==" class="opt-area-add-icon">
+                                                                    <span class="opt-area-add-text">添加对话模板</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="template-manage-form-wrap" style="display: none;">
+                                                                <div class="template-manage-form">
+                                                                    <div class="template-manage-form-inner">
+                                                                    <div class="template-manage-form-row type">
+                                                                            <div class="template-manage-form-row-lt">模板类型：</div>
+                                                                            <div class="template-manage-form-row-rt rt-type rt-type-0">
+                                                                                <div class="template-manage-form-cnt multiple">
+                                                                                    <select class="cnt-input-select">
+                                                                                        <option value="SP_ANS">特殊匹配</option>
+                                                                                        <option value="PRIOR_MATCH">优先匹配</option>
+                                                                                        <option value="SIMPLE_LOGIC">简单逻辑匹配</option>
+                                                                                        <option value="SWITCH">状态转换匹配</option>
+                                                                                        <option value="COREFERENCE">指代表示匹配</option>
+                                                                                        <option value="RELATION">关系匹配</option>
+                                                                                        <option value="COMMON">普通匹配</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="template-manage-form-row template">
+                                                                        <div class="template-manage-form-row-lt">模板句式：</div>
+                                                                            <div class="template-manage-form-row-rt rt-pattern rt-pattern-0">
+                                                                                <div class="template-manage-form-cnt multiple">
+                                                                                    <div class="cnt-input-container">
+                                                                                        <div class="cnt-input-wrap" style="margin-right: -17px; margin-bottom: -17px;">
+                                                                                            <div class="cnt-input-edit" id="cnt-input-edit" contenteditable="true"></div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="template-manage-form-row slot-keyword">
+                                                                            <div class="template-manage-form-row-lt"></div>
+                                                                            <div class="template-manage-form-row-rt">
+                                                                                <div class="template-manage-form-row-item slot-multiple">
+                                                                                    <div class="template-manage-form-row-item-head">插入词槽</div>
+                                                                                    <div class="template-manage-form-row-item-cnt">
+                                                                                        {% for item in all_slots %}
+                                                                                            <button class="template-manage-form-row-block" id="{{ item }}" onclick="insertSlot(this)">{{ item }}</button>
+                                                                                        {% endfor %}
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="template-manage-form-row-item keywords-multiple">
+                                                                                    <div class="template-manage-form-row-item-head">插入特征词</div>
+                                                                                    <div class="template-manage-form-row-item-cnt">
+                                                                                        <button class="template-manage-form-row-block" onclick="openDialog()">新建特征词</button>
+                                                                                        {% for item in all_features %}
+                                                                                            <button class="template-manage-form-row-block" id="{{ item }}" onclick="insertFeature(this)">{{ item }}</button>
+                                                                                        {% endfor %}
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="template-manage-form-row-item generals-multiple">
+                                                                                    <div class="template-manage-form-row-item-head">插入通用词</div>
+                                                                                    <div class="template-manage-form-row-item-cnt">
+                                                                                        {% for item in all_generals %}
+                                                                                            <button class="template-manage-form-row-block" id="{{ item }}" onclick="insertGeneral(this)">{{ item }}</button>
+                                                                                        {% endfor %}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="template-manage-form-row opt">
+                                                                        <button disabled type="button" class="ant-btn add-form-confirm-btn" onclick="confirm()">
+                                                                            <span>确 认</span>
+                                                                        </button>
+                                                                        <button type="button" class="ant-btn cancel" onclick="addPattern()">
+                                                                            <span>取 消</span>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="template-manage-form-wrap is-hidden"></div>
+                                                            <div class="template-manage-table">
+                                                                <div class="template-manage-table-title">
+                                                                    <div class="template-manage-table-title-opt top is-disabled" title="多条模板之间的优先级可以上移下移来调整">上移</div>
+                                                                    <div class="template-manage-table-title-opt bottom is-disabled" title="多条模板之间的优先级可以上移下移来调整">下移</div>
+                                                                    <div class="template-manage-table-title-opt del is-disabled" onclick="delManyPattern()">删除模板</div>
+                                                                    <div class="pattern-search">
+                                                                        <div class="pattern-search-item sel">
+                                                                            <div class="rc-select rc-select-enabled">
+                                                                                <div class="rc-select-selection rc-select-selection--single" role="combobox" aria-autocomplete="list" aria-haspopup="true" aria-controls="6de7e815-5f21-4832-df09-7b675e6d214e" aria-expanded="false" tabindex="0">
+                                                                                    <div class="rc-select-selection__rendered">
+                                                                                        <div unselectable="on" class="rc-select-selection__placeholder" style="display: none; user-select: none;">搜索内容</div>
+                                                                                        <div class="rc-select-selection-selected-value" title="模板片段内容" style="display: block; opacity: 1;">模板片段内容</div>
+                                                                                    </div>
+                                                                                    <span class="rc-select-arrow" unselectable="on" style="user-select: none;">
+                                                                                        <i class="rc-select-arrow-icon"></i>
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="fixed-table">
+                                                                    <div class="table-header">
+                                                                        <div class="table-cell template-manage-chk">
+                                                                            <label class="ai-checkbox-white ai-checkbox-wrapper">
+                                                                                <span class="ai-checkbox">
+                                                                                    <input type="checkbox" class="ai-checkbox-input" id="select_all" value="" onclick="selectAll()">
+                                                                                    <span class="ai-checkbox-inner"></span>
+                                                                                </span>
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="table-cell template-manage-type">模板类型</div>
+                                                                        <div class="table-cell template-manage-cnt">模板内容</div>
+                                                                        <div class="table-cell template-manage-order">模板顺序</div>
+                                                                        <div class="table-cell template-manage-opt">操作</div>
+                                                                    </div>
+                                                                    <div class="table-body">
+                                                                        {% for item in all_patterns %}
+                                                                            <div class="table-row">
+                                                                                <div class="table-cell template-manage-chk">
+                                                                                <label class="ai-checkbox-white ai-checkbox-wrapper">
+                                                                                    <span class="ai-checkbox">
+                                                                                        <input type="checkbox" class="ai-checkbox-input" value="0" onclick="checkbox()">
+                                                                                        <span class="ai-checkbox-inner"></span>
+                                                                                    </span>
+                                                                                </label>
+                                                                                </div>
+                                                                            <div class="table-cell template-manage-id" style="display:none;">{{ item[0] }}</div>
+                                                                            <div class="table-cell template-manage-type">{{ item[1] }}</div>
+                                                                            <div class="table-cell template-manage-cnt">
+                                                                                <div class="template-manage-cell-row">{{ item[2] }}</div>
+                                                                            </div>
+                                                                            <div class="table-cell template-manage-order">
+                                                                                <div class="template-manage-cell-row">{{ item[3] }}</div>
+                                                                            </div>
+                                                                            <div class="table-cell template-manage-opt">
+                                                                                <div class="template-manage-cell-row del" id="{{ item[0] }}" onclick="delPattern(this)">删除</div>
+                                                                            </div>
+                                                                            </div>
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="under-table-pager">
+                                                                    <ul class="ai-pagination ant-pagination" unselectable="unselectable">
+                                                                        <li title="上一页" class="ai-pagination-disabled ai-pagination-prev {% if page <= 1 %}is-disabled{% endif %}" aria-disabled="true">
+                                                                            <a class="ai-pagination-item-link" {% if total_page >= page > 1 %}href="/patterns?page={{ page - 1 }}"{% endif %} style="text-decoration: none;" ></a>
+                                                                        </li>
+                                                                        <li title="第{{ page }}页" class="ai-pagination-item ai-pagination-item-1 ai-pagination-item-active" tabindex="0">
+                                                                            <a>{{ page }}</a>
+                                                                        </li>
+                                                                        <li title="下一页" class="ai-pagination ai-pagination-next {% if page >= total_page %}is-disabled{% endif %}" aria-disabled="true">
+                                                                            <a class="ai-pagination-item-link" {% if 1 <= page < total_page %}href="/patterns?page={{ page + 1 }}"{% endif %} style="text-decoration: none;"></a>
+                                                                        </li>
+                                                                    </ul>
+                                                                    <span class="under-table-pager-total-page">共{{ total_page }}页</span>
+                                                                    <span class="under-table-pager-total-count">{{ count }}条</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dialog" style="display: none;">
+        <div>
+            <div class="ant-modal-mask"></div>
+            <div tabindex="-1" class="ant-modal-wrap keywords-modal" role="dialog" aria-labelledby="rcDialogTitle7">
+                <div role="document" class="ant-modal" style="width: 534px; transform-origin: 305px 405px;">
+                    <div tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden;"></div>
+                    <div class="ant-modal-content">
+                        <button type="button" aria-label="Close" class="ant-modal-close" onclick="closeDialog()">
+                            <span class="ant-modal-close-x">
+                                <i aria-label="icon: close" class="anticon anticon-close ant-modal-close-icon">
+                                    <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="close" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                                        <path d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 0 0 203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"></path>
+                                    </svg>
+                                </i>
+                            </span>
+                        </button>
+                        <div class="ant-modal-header">
+                            <div class="ant-modal-title" id="rcDialogTitle7">新建特征词</div>
+                        </div>
+                        <div class="ant-modal-body">
+                            <div class="modal-table">
+                                <div class="modal-row">
+                                    <label class="modal-cell label"><span class="star-red">*</span>名称:</label>
+                                    <div class="modal-cell">
+                                        <div class="keyword-name-wrap">
+                                            <input class="ant-input keyword-name-input" maxlength="17" placeholder="请输入特征词名称" type="text" oninput="checkConfirm()">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-row dict-value">
+                                    <label class="modal-cell label"><span class="star-red">*</span>词典值:</label>
+                                    <div class="modal-cell">
+                                        <textarea rows="6" class="modal-text-input keywords-dict" placeholder="请输入词典值，一行一个" oninput="checkConfirm()" ></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ant-modal-footer">
+                            <button disabled="" type="button" class="ant-btn" id="confirm" onclick="addFeature()">
+                                <span>确 定</span>
+                            </button>
+                            <button type="button" class="ant-btn cancel" onclick="closeDialog()">
+                                <span>取 消</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
