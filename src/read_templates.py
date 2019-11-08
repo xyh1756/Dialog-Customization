@@ -91,6 +91,7 @@ class ReadTemplates(object):
         type_index = self.type_index[this_type]
         pattern_sql = "INSERT INTO pattern (type, pattern, priority, type_index) VALUES (%s, %s, %s, %s);"
         self.check_con()
+        print(type_index)
         self.cursor.execute(pattern_sql, (this_type, content, 0, type_index))
         self.db_con.commit()
         return True
@@ -104,7 +105,7 @@ class ReadTemplates(object):
         return True
 
     def all_patterns(self, page: int, page_size: int):
-        pattern_sql = "SELECT * FROM pattern LIMIT %s OFFSET %s;"
+        pattern_sql = "SELECT * FROM pattern ORDER BY type_index LIMIT %s OFFSET %s;"
         self.check_con()
         count_sql = "SELECT COUNT(*) FROM pattern;"
         self.cursor.execute(count_sql)
@@ -123,21 +124,63 @@ class ReadTemplates(object):
             pattern.append(item[4])
             all_patterns.append(pattern)
         all_patterns.sort(key=cmp_to_key(lambda x, y: x[4] - y[4]))
-
         return all_patterns, count, total_page
 
-    def all_dicts(self):
+    def all_dicts(self, page: int, page_size: int):
         dicts_sql = "SELECT * FROM dict;"
         self.check_con()
+        count_sql = "SELECT COUNT(*) FROM features_index;"
+        self.cursor.execute(count_sql)
+        count = self.cursor.fetchall()[0][0]
+        total_page = math.ceil(float(count) / page_size)
+        page = total_page if page > total_page else page
         self.cursor.execute(dicts_sql)
         db_res = self.cursor.fetchall()
         all_dicts = dict()
+        index_sql = "SELECT * FROM features_index LIMIT %s OFFSET %s;"
+        self.cursor.execute(index_sql, (page_size, page_size * (page - 1)))
+        db_index = self.cursor.fetchall()
+        for item in db_index:
+            if not all_dicts.get(item[1], {}):
+                all_dicts[item[1]] = dict()
+                all_dicts[item[1]]['all'] = []
+                all_dicts[item[1]]['disc'] = ""
         for item in db_res:
-            if not all_dicts.get(item[1], []):
-                all_dicts[item[1]] = []
-            all_dicts[item[1]].append(item[2])
-        print(all_dicts)
-        return all_dicts
+            if all_dicts.get(item[1], {}):
+                all_dicts[item[1]]['all'].append(item[2])
+                all_dicts[item[1]]['disc'] += item[2] + '、'
+        for item in all_dicts:
+            if all_dicts[item]['disc']:
+                all_dicts[item]['disc'] = all_dicts[item]['disc'][:-1]
+        return all_dicts, count, total_page
+
+    def all_final_generals(self, page: int, page_size: int):
+        generals_sql = "SELECT * FROM general;"
+        self.check_con()
+        count_sql = "SELECT COUNT(*) FROM generals_index;"
+        self.cursor.execute(count_sql)
+        count = self.cursor.fetchall()[0][0]
+        total_page = math.ceil(float(count) / page_size)
+        page = total_page if page > total_page else page
+        self.cursor.execute(generals_sql)
+        db_res = self.cursor.fetchall()
+        all_generals = dict()
+        index_sql = "SELECT * FROM generals_index LIMIT %s OFFSET %s;"
+        self.cursor.execute(index_sql, (page_size, page_size * (page - 1)))
+        db_index = self.cursor.fetchall()
+        for item in db_index:
+            if not all_generals.get(item[1], {}):
+                all_generals[item[1]] = dict()
+                all_generals[item[1]]['all'] = []
+                all_generals[item[1]]['disc'] = ""
+        for item in db_res:
+            if all_generals.get(item[1], {}):
+                all_generals[item[1]]['all'].append(item[2])
+                all_generals[item[1]]['disc'] += item[2] + '、'
+        for item in all_generals:
+            if all_generals[item]['disc']:
+                all_generals[item]['disc'] = all_generals[item]['disc'][:-1]
+        return all_generals, count, total_page
 
     def all_slots(self, page: int, page_size: int):
         slots_sql = "SELECT * FROM slots LIMIT %s OFFSET %s;"
@@ -151,8 +194,23 @@ class ReadTemplates(object):
         db_res = self.cursor.fetchall()
         all_slots = []
         for item in db_res:
-            all_slots.append(item[1])
+            slot = [item[0], item[1], item[2]]
+            all_slots.append(slot)
         return all_slots, count, total_page
+
+    def add_slots(self, slot_key: str, slot_disc: str):
+        self.check_con()
+        index_sql = "INSERT INTO slots (slot_key, disc) VALUES (%s, %s);"
+        self.cursor.execute(index_sql, (slot_key, slot_disc))
+        self.db_con.commit()
+        return True
+
+    def del_slots(self, slot_id: int):
+        self.check_con()
+        slots_sql = "DELETE FROM slots WHERE id=%s;"
+        self.cursor.execute(slots_sql, slot_id)
+        self.db_con.commit()
+        return True
 
     def all_features(self):
         features_sql = "SELECT * FROM features_index;"
@@ -186,13 +244,41 @@ class ReadTemplates(object):
             features[i[1]].append(i[2])
         return features
 
-    def add_features(self, dict_key: str, dict_value: list):
+    def add_feature(self, dict_key: str, dict_value: list):
         self.check_con()
         index_sql = "INSERT INTO features_index (feature_key) VALUES (%s);"
         self.cursor.execute(index_sql, dict_key)
         for value in dict_value:
             dict_sql = "INSERT INTO dict (dict_key, dict_value) VALUES (%s, %s);"
             self.cursor.execute(dict_sql, (dict_key, value))
+        self.db_con.commit()
+        return True
+
+    def del_feature(self, dict_key: str):
+        self.check_con()
+        index_sql = "DELETE FROM features_index WHERE feature_key=%s;"
+        self.cursor.execute(index_sql, dict_key)
+        dict_sql = "DELETE FROM dict WHERE dict_key=%s;"
+        self.cursor.execute(dict_sql, dict_key)
+        self.db_con.commit()
+        return True
+
+    def add_general(self, general_key: str, general_value: list):
+        self.check_con()
+        index_sql = "INSERT INTO generals_index (general_key) VALUES (%s);"
+        self.cursor.execute(index_sql, general_key)
+        for value in general_value:
+            general_sql = "INSERT INTO general (general_key, general_value) VALUES (%s, %s);"
+            self.cursor.execute(general_sql, (general_key, value))
+        self.db_con.commit()
+        return True
+
+    def del_general(self, general_key: str):
+        self.check_con()
+        index_sql = "DELETE FROM generals_index WHERE general_key=%s;"
+        self.cursor.execute(index_sql, general_key)
+        general_sql = "DELETE FROM general WHERE general_key=%s;"
+        self.cursor.execute(general_sql, general_key)
         self.db_con.commit()
         return True
 

@@ -101,7 +101,7 @@
                                                                                     <div class="template-manage-form-row-item-head">插入词槽</div>
                                                                                     <div class="template-manage-form-row-item-cnt">
                                                                                         {% for item in all_slots %}
-                                                                                            <button class="template-manage-form-row-block" id="{{ item }}" onclick="insertSlot(this)">{{ item }}</button>
+                                                                                            <button class="template-manage-form-row-block" id="{{ item[1] }}" onclick="insertSlot(this)">{{ item[1] }}</button>
                                                                                         {% endfor %}
                                                                                     </div>
                                                                                 </div>
@@ -183,7 +183,7 @@
                                                                                     </span>
                                                                                 </label>
                                                                                 </div>
-                                                                            <div class="table-cell template-manage-id" style="display:none;">{{ item[0] }}</div>
+                                                                            <div class="table-cell template-manage-id" style="display: none;">{{ item[0] }}</div>
                                                                             <div class="table-cell template-manage-type">{{ item[1] }}</div>
                                                                             <div class="table-cell template-manage-cnt">
                                                                                 <div class="template-manage-cell-row">{{ item[2] }}</div>
@@ -200,7 +200,7 @@
                                                                 </div>
                                                                 <div class="under-table-pager">
                                                                     <ul class="ai-pagination ant-pagination" unselectable="unselectable">
-                                                                        <li title="上一页" class="ai-pagination-disabled ai-pagination-prev {% if page <= 1 %}is-disabled{% endif %}" aria-disabled="true">
+                                                                        <li title="上一页" class="ai-pagination ai-pagination-prev {% if page <= 1 %}is-disabled{% endif %}" aria-disabled="true">
                                                                             <a class="ai-pagination-item-link" {% if total_page >= page > 1 %}href="/patterns?page={{ page - 1 }}"{% endif %} style="text-decoration: none;" ></a>
                                                                         </li>
                                                                         <li title="第{{ page }}页" class="ai-pagination-item ai-pagination-item-1 ai-pagination-item-active" tabindex="0">

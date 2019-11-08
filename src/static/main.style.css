@@ -1266,18 +1266,22 @@ label {
     height: 41px;
 }
 
-.slots-manage-name, .slots-manage-noun {
-    width: 16%;
+.slots-manage-noun {
+    width: 10%;
+}
+
+.slots-manage-name {
+    width: 19%;
 }
 
 .slots-manage-opt {
-    width: 20%;
+    width: 15%;
     position: relative;
     overflow: visible;
 }
 
 .slots-manage-opt-item {
-    margin-right: 25px;
+    margin-right: 28px;
     cursor: pointer;
     color: rgb(51, 51, 51);
 }

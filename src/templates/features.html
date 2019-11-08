@@ -28,12 +28,12 @@
                                                     <span class="menu-item-text">模板管理</span>
                                                 </a>
                                             </div>
-                                            <div class="cola-menu-item is-active">
+                                            <div class="cola-menu-item">
                                                 <a href="slots">
                                                     <span class="menu-item-text">词槽管理</span>
                                                 </a>
                                             </div>
-                                            <div class="cola-menu-item">
+                                            <div class="cola-menu-item is-active">
                                                 <a href="features">
                                                     <span class="menu-item-text">特征词管理</span>
                                                 </a>
@@ -53,24 +53,27 @@
                                         <div class="slots-manage-panel">
                                             <div class="slots-manage-btn-area">
                                                 <button type="button" class="ant-btn" onclick="openDialog()">
-                                                    <span>新建词槽</span>
+                                                    <span>新建特征词</span>
                                                 </button>
                                             </div>
                                             <div class="slots-manage-section">
                                                 <div class="fixed-table slots-manage-table">
                                                     <div class="table-header">
-                                                        <div class="table-cell slots-manage-noun">词槽名称</div>
-                                                        <div class="table-cell slots-manage-name">描述</div>
+                                                        <div class="table-cell slots-manage-noun">特征词名称</div>
+                                                        <div class="table-cell slots-manage-name">词典值</div>
                                                         <div class="table-cell slots-manage-opt">操作</div>
                                                     </div>
                                                     <div class="table-body">
-                                                        {% for item in all_slots %}
+                                                    <div class="edit-feature-key" style="display: none;"></div>
+                                                    <div class="edit-feature-value" style="display: none;"></div>
+                                                        {% for item in all_features %}
                                                             <div class="table-row">
-                                                                <div class="table-cell slots-manage-id" style="display: none;">{{ item[0] }}</div>
-                                                                <div class="table-cell slots-manage-noun">{{ item[1] }}</div>
-                                                                <div class="table-cell slots-manage-name">{{ item[2] }}</div>
+                                                                <div class="table-cell slots-manage-noun">{{ item }}</div>
+                                                                <div class="table-cell slots-manage-name">{{ all_features[item]['disc'] }}</div>
                                                                 <div class="table-cell slots-manage-opt">
-                                                                    <span class="slots-manage-opt-item delete" id="{{ item[0] }}" onclick="delSlot(this)">删除</span>
+                                                                    <span class="slots-manage-opt-item" id="{{ item }}" onclick="openDialog2(this)">编辑词典值</span>
+                                                                    <div class="slots-manage-opt-item-1" id="{{ all_features[item]['disc'] }}" style="display: none;"></div>
+                                                                    <span class="slots-manage-opt-item delete" id="{{ item }}" onclick="delFeature(this)">删除</span>
                                                                 </div>
                                                             </div>
                                                         {% endfor %}
@@ -79,13 +82,13 @@
                                                 <div class="under-table-pager">
                                                     <ul class="ai-pagination ant-pagination" unselectable="unselectable">
                                                         <li title="上一页" class="ai-pagination ai-pagination-prev {% if page <= 1 %}is-disabled{% endif %}" aria-disabled="true">
-                                                            <a class="ai-pagination-item-link" {% if total_page >= page > 1 %}href="/slots?page={{ page - 1 }}"{% endif %} style="text-decoration: none;" ></a>
+                                                            <a class="ai-pagination-item-link" {% if total_page >= page > 1 %}href="/features?page={{ page - 1 }}"{% endif %} style="text-decoration: none;" ></a>
                                                         </li>
                                                         <li title="第{{ page }}页" class="ai-pagination-item ai-pagination-item-1 ai-pagination-item-active" tabindex="0">
                                                             <a>{{ page }}</a>
                                                         </li>
                                                         <li title="下一页" class="ai-pagination ai-pagination-next {% if page >= total_page %}is-disabled{% endif %}" aria-disabled="true">
-                                                            <a class="ai-pagination-item-link" {% if 1 <= page < total_page %}href="/slots?page={{ page + 1 }}"{% endif %} style="text-decoration: none;"></a>
+                                                            <a class="ai-pagination-item-link" {% if 1 <= page < total_page %}href="/features?page={{ page + 1 }}"{% endif %} style="text-decoration: none;"></a>
                                                         </li>
                                                     </ul>
                                                     <span class="under-table-pager-total-page">共{{ total_page }}页</span>
@@ -119,7 +122,7 @@
                             </span>
                         </button>
                         <div class="ant-modal-header">
-                            <div class="ant-modal-title" id="rcDialogTitle7">新建词槽</div>
+                            <div class="ant-modal-title" id="rcDialogTitle7">新建特征词</div>
                         </div>
                         <div class="ant-modal-body">
                             <div class="modal-table">
@@ -127,23 +130,74 @@
                                     <label class="modal-cell label"><span class="star-red">*</span>名称:</label>
                                     <div class="modal-cell">
                                         <div class="keyword-name-wrap">
-                                            <input class="ant-input keyword-name-input" maxlength="17" placeholder="请输入特征词名称" type="text" oninput="checkConfirmKey()">
+                                            <input class="ant-input keyword-name-input" maxlength="17" placeholder="请输入特征词名称" type="text" oninput="checkConfirm()">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-row dict-value">
-                                    <label class="modal-cell label">描述:</label>
+                                    <label class="modal-cell label"><span class="star-red">*</span>词典值:</label>
                                     <div class="modal-cell">
-                                        <textarea rows="6" class="modal-text-input keywords-dict" placeholder="请输入词槽描述" oninput="checkConfirmKey()" ></textarea>
+                                        <textarea rows="6" class="modal-text-input keywords-dict" placeholder="请输入词典值，一行一个" oninput="checkConfirm()" ></textarea>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="ant-modal-footer">
-                            <button disabled="" type="button" class="ant-btn" id="confirm" onclick="addSlot()">
+                            <button disabled="" type="button" class="ant-btn" id="confirm" onclick="addFeature()">
                                 <span>确 定</span>
                             </button>
                             <button type="button" class="ant-btn cancel" onclick="closeDialog()">
+                                <span>取 消</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dialog2" style="display: none;">
+        <div>
+            <div class="ant-modal-mask"></div>
+            <div tabindex="-1" class="ant-modal-wrap keywords-modal" role="dialog" aria-labelledby="rcDialogTitle7">
+                <div role="document" class="ant-modal" style="width: 534px; transform-origin: 305px 405px;">
+                    <div tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden;"></div>
+                    <div class="ant-modal-content">
+                        <button type="button" aria-label="Close" class="ant-modal-close" onclick="closeDialog2()">
+                            <span class="ant-modal-close-x">
+                                <i aria-label="icon: close" class="anticon anticon-close ant-modal-close-icon">
+                                    <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="close" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                                        <path d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 0 0 203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"></path>
+                                    </svg>
+                                </i>
+                            </span>
+                        </button>
+                        <div class="ant-modal-header">
+                            <div class="ant-modal-title" id="rcDialogTitle7">编辑特征词</div>
+                        </div>
+                        <div class="ant-modal-body">
+                            <div class="modal-table">
+                                <div class="modal-row">
+                                    <label class="modal-cell label"><span class="star-red">*</span>名称:</label>
+                                    <div class="modal-cell">
+                                        <div class="keyword-name-wrap">
+                                            <input class="ant-input keyword-name-input" maxlength="17" placeholder="请输入特征词名称" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-row dict-value">
+                                    <label class="modal-cell label"><span class="star-red">*</span>词典值:</label>
+                                    <div class="modal-cell">
+                                        <textarea rows="6" class="modal-text-input keywords-dict" placeholder="请输入词典值，一行一个" oninput="checkConfirm2()" ></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ant-modal-footer">
+                            <button disabled="" type="button" class="ant-btn" id="confirm2" onclick="editFeature()">
+                                <span>确 定</span>
+                            </button>
+                            <button type="button" class="ant-btn cancel" onclick="closeDialog2()">
                                 <span>取 消</span>
                             </button>
                         </div>
